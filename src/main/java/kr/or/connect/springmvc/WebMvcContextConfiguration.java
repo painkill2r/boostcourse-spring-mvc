@@ -6,11 +6,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+/**
+ * DispatcherServlet이 읽어 들이는 설정 파일
+ */
 @Configuration
-@EnableWebMvc
-@ComponentScan(basePackages = {"kr.or.connect.springmvc"})
+@EnableWebMvc //Web에 필요한 설정을 자동으로 해줌.
+//@ComponentScan(basePackages = {"kr.or.connect.springmvc."}) //레이어드 아키텍처가 아닌 학습을 할 경우 주석 해제
+@ComponentScan(basePackages = {"kr.or.connect.springmvc.la.controller"}) //레이어드 아키텍처를 학습할 경우 주석 해제
 public class WebMvcContextConfiguration extends WebMvcConfigurerAdapter {
 
+    /**
+     * 특정 URL 요청에 대해서는 별도로 처리할 수 있게 설정
+     *
+     * @param registry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
@@ -42,6 +51,7 @@ public class WebMvcContextConfiguration extends WebMvcConfigurerAdapter {
 
     /**
      * ViewResolver 설정
+     * View 파일 경로 설정
      *
      * @return
      */
