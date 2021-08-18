@@ -20,7 +20,7 @@ public class DBConfig implements TransactionManagementConfigurer {
     private String driverClassName = "com.mysql.jdbc.Driver";
     private String url = "jdbc:mysql://1.215.95.163:3306/developer?useUnicode=true&characterEncoding=utf8";
     private String username = "developer";
-    private String password = "dev12#";
+    private String password = "dev123~";
 
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
