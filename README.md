@@ -432,4 +432,38 @@
 
 ## @RestController
 
-1. 
+1. Spring 4에서 REST API 또는 Web API를 개발하기 위해 등장한 어노테이션이다.
+    - 이전 버전의 @Controller와 @ResponseBody를 포함한다.
+
+### Message Converter
+
+1. 자바 객체와 HTTP 요청/응답 바디를 변환하는 역할
+2. `@ResponseBody`, `@RequestBody`
+3. `@EnableWebMvc` 사용으로 인한 기본 설정
+4. `WebMvcConfigurationSupport`를 사용하여 Spring MVC 구현
+5. `Default MessageConvertor` 를 제공
+6. [참고 자료](https://github.com/spring-projects/spring-framework/blob/main/spring-webmvc/src/main/java/org/springframework/web/servlet/config/annotation/WebMvcConfigurationSupport.java)
+   의 addDefaultHttpMessageConverters() 메소드 항목 참조
+
+#### Message Converter 종류
+
+|종류|기능|
+|:----:|:----|
+|ByteArrayHttpMessageConverter|Converts byte arrays|
+|StringHttpMessageConverter|Converts Strings|
+|ResourceHttpMessageConverter|Converts org.springframework.core.io.Resource for any type of octec stream|
+|SourceHttpMessageConverter|Converts javax.xml.transform.Source|
+|FormHttpMessageConverter|Converts form data to/from a MultiValueMap<String, String>|
+|Jaxb2RootElementHttpMessageConverter|Converts java objects to/from XML(Added only if `JAXB2` is present on the classpath)|
+|MappingJackson2HttpMessageConverter|Converts JSON(Added only if `Jackson2` is present on the classpath)|
+|MappingJacksonHttpMessageConverter|Converts JSON(Added only if `Jackson` is present on the classpath)|
+|AtomFeedHttpMessageConverter|Converts Atom feeds(Added only if `Rome` is present on the classpath)|
+|RssChannelHttpMessageConverter|Converts RSS feeds(Added only if `Rome` is present on the classpath)|
+
+### JSON 응답하기
+
+1. 컨트롤러의 메소드에서는 JSON으로 변환될 객체를 반환합니다.
+2. Jackson 라이브러리를 추가할 경우 객체를 JSON으로 변환하는 메시지 컨버터가 사용되도록 `@EnableWebMvc에서 기본으로 설정`되어 있다.
+3. Jackson 라이브러리를 추가하지 않으면 JSON으로 변환할 수 없어 오류가 발생한다.
+    - 사용자가 임의의 메시지 컨버터(Message Converter)를 사용하도록 하려면 `WebMvcConfigurerAdapter`의 `configureMessageConverters()` 메소드를
+      오버라이딩 한다.
