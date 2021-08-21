@@ -393,6 +393,43 @@
 
 ## Web API
 
+1. Web API를 코딩하기 위해서는 Controller에서 `@ResponseBody` 어노테이션을 사용해야 한다.
+   ```java
+   @Controller
+   public class PlusApiController {
+   
+       @ResponseBody
+       @GetMapping("/api/plus")
+       public PlusResult plus(@RequestParam("value1") int value1, @RequestParam("value2") int value2) {
+           PlusResult plusResult = new PlusResult();
+           plusResult.setValue1(value1);
+           plusResult.setValue2(value2);
+           plusResult.setResult(value1 + value2);
+   
+           return plusResult;
+       }
+   }
+   ```
+2. `@ResponseBody`를 사용하면 해당 메소드는 뷰이름을 리턴하는 것이 아니라, 리턴한 객체를 출력한다.
+3. 만약, 실행시 `No converter found for return value of type: ~~~`와 같은 에러 메시지가 출력되는 경우 `컨버터`가 없다는 것이다.
+    - DispathcerServlet은 컨트롤러 메소드를 실행하고 해당 메소드가 객체를 반환하려는 경우 해당 객체를 변환시키려고 하는데, 이떄 `메시지 컨버터(Message Converter)`를 사용하게
+      된다.
+    - 하지만 이 `메시지 컨버터(Message Converter)`가 `빈(Bean)`으로 등록되어 있지 않은 경우 위와 같은 에러 메시지가 출력된다.
+4. 보통 Web API는 JSON, XML과 같은 형태로 결과를 출력하는데, 만약 JSON으로 출력하기 위해서는 다음과 같은 라이브러리를 `pom.xml`에 추가해야 한다.
+   ```xml
+   <!-- Jackson 라이브러리는 객체를 JSON으로 또는 JSON을 객체로 변환시킬 때 주로 사용된다. -->
+   <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.10.2</version>
+   </dependency>
+   <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.10.2</version>
+   </dependency>
+   ```
+
 ## @RestController
 
 1. 
