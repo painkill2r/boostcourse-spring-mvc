@@ -199,7 +199,7 @@
 
 #### 트랜잭션(Transaction)이란?
 
-1. 트랜잭션의 특징은 크게 4가지로 구분됩니다.
+1. 트랜잭션의 특징은 크게 4가지로 구분된다.
     - 원자성(Atomicity)
         - 예를 들어, '출금'이라는 기능의 흐름이 다음과 같다고 생각해 보자.
             1. 잔액이 얼마인지 조회한다.
@@ -231,16 +231,168 @@
 
 #### 서비스 객체에서 중복으로 호출되는 코드의 처리
 
-1. 데이터 엑세스 메소드를 별도의 `Repository(DAO)` 객체에서 구현하도록 하고 Service는 Repository객체를 사용하도록 합니다.
+1. 데이터 엑세스 메소드를 별도의 `Repository(DAO)` 객체에서 구현하도록 하고 Service는 Repository 객체를 사용하도록 한다.
 
 ### 설정의 분리
 
 1. Spring 설정 파일을 프리젠테이션 레이어쪽과 나머지를 분리할 수 있다.
     - `web.xml` 파일에서 `프리젠테이션 레이어에 대한 스프링 설정은 DispathcerServlet이` 읽도록 하고, `그 외의 설정은 ContextLoaderListener`를 통해서 읽도록 한다.
-2. DispatcherServlet을 경우에 따라서 2개 이상 설정할 수 있다.
-    - 이 경우 각각의 DispathcerServlet의 `ApplicationContext가 각각 독립적이기 때문에 각각의 설정 파일에서 생성한 빈을 서로 사용할 수 없다.`
-    - 위의 경우와 같이 `동시에 필요한 빈은 ContextLoaderListener를 사용함으로써 공통으로 사용`하게 할 수 있습니다.
+2. DispatcherServlet은 경우에 따라서 2개 이상 설정할 수 있다.
+    - 이 경우 `각각의 DispathcerServlet의 ApplicationContext가 각각 독립적`이기 때문에 `각각의 설정 파일에서 생성한 빈을 서로 사용할 수 없다.`
+    - 위의 경우와 같이 `동시에 필요한 빈`은 `ContextLoaderListener를 사용`함으로써 공통으로 사용하게 할 수 있다.
 3. ContextLoaderListener와 DispatcherServlet은 각각 ApplicationContext를
    생성하는데, `ContextLoaderListener가 생성하는 ApplicationContext가 root 컨텍스트`가
-   되고 `DispatcherServlet이 생성한 인스턴스는 root 컨텍스트를 부모로 하는 자식 컨텍스트`가 됩니다.
-    - 참고로, `자식 컨텍스트들은 root 컨텍스트의 설정 빈을 사용할 수 있습니다.`
+   되고 `DispatcherServlet이 생성한 인스턴스는 root 컨텍스트를 부모로 하는 자식 컨텍스트`가 된다.
+    - 참고로, `자식 컨텍스트들은 root 컨텍스트의 설정 빈을 사용할 수 있다.`
+
+## REST API
+
+1. 2000년도 로이 필딩(Roy Fielding) 박사의 학위 논문에 REST라는 개념이 처음 등장하였다.
+2. REST는 `Representational State Transfer`의 약자로 자원을 이름으로 구분하여 해당 자원의 상태(정보)를 주고 받는 모든 것을 의미한다.
+3. REST는 기본적으로 웹의 기존 기술과 HTTP 프로토콜을 그대로 활용하기 때문에 웹의 장점을 최대한 활용할 수 있는 아키텍처 스타일이라고 말할 수 있다.
+
+### REST 구성
+
+1. 자원(Resource)
+    - Data, Meta Data, HATEOAS로 나뉜다.
+2. 행위(Verb)
+    - HTTP Method로 표현된다.
+3. 표현(Representations)
+
+### REST 특징
+
+1. Uniform Interface(유니폼 인터페이스)
+    - 구성 요소(클라이언트, 서버 등) 사이의 인터페이스는 균일(uniform)해야 한다.
+    - 인터페이스를 일반화함으로써, 전체 시스템 아키텍처가 단순해지고, 상호 작용의 가시성이 개선되며, 구현과 서비스가 분리되므로 독립적인 진화가 가능해질 수 있다.
+2. Stateless (무상태성)
+    - 클라이언트와 서버의 통신에는 상태가 없어야 한다.
+        - 모든 요청은 필요한 모든 정보를 담고 있어야 한다.
+            - 요청 하나만 봐도 바로 무엇인지 알 수 있으므로 가시성이 개선되고, Task 실패시 복원이 쉬우므로 신뢰성이 개선되며, 상태를 저장할 필요가 없으므로 규모 확장성이 개선될 수 있다.
+3. Cacheable (캐시 가능)
+    - 캐시가 가능해야 한다.
+        - 즉, 모든 서버 응답은 캐시가 가능한지 그렇지 아닌지 알 수 있어야 한다.
+            - 캐시를 사용하면 효율, 규모 확장성, 사용자 입장에서의 성능이 개선된다.
+4. Self-descriptiveness (자체 표현 구조)
+    - REST의 또 다른 큰 특징 중 하나는 REST API 메시지만 보고도 이를 쉽게 이해 할 수 있는 자체 표현 구조로 되어 있다는 것이다.
+5. Client - Server 구조
+    - 클라이언트 - 서버 스타일은 사용자 인터페이스에 대한 관심(Concern)을 데이터 저장에 대한 관심으로부터 분리함으로써 클라이언트의 이식성과 서버의 규모확장성을 개선할 수 있다.
+6. Layered System(계층형 구조)
+    - REST 서버는 다중 계층으로 구성될 수 있으며 보안, 로드 밸런싱, 암호화 계층을 추가해 구조상의 유연성을 둘 수 있고 PROXY, 게이트웨이 같은 네트워크 기반의 중간매체를 사용할 수 있게 한다.
+
+### REST 설계 가이드
+
+1. URI는 정보의 자원을 표현해야 한다.
+    - resource는 동사보다는 명사를, 대문자보다는 소문자를 사용한다.
+    - resource의 도큐먼트 이름으로는 단수 명사를 사용해야 한다.
+    - resource의 컬렉션 이름으로는 복수 명사를 사용해야 한다.
+    - resource의 스토어 이름으로는 복수 명사를 사용해야 한다.
+        - 예 : GET /members/1
+
+2. 자원에 대한 행위는 HTTP Method(GET, POST, PUT, DELETE)로 표현해야 한다.
+
+3. URI에 HTTP Method가 들어가면 안된다.
+    - 예) GET /books/delete/1 -> DELETE /books/1
+
+4. URI에 행위에 대한 동사 표현이 들어가면 안된다.
+    - 즉, CRUD 기능을 나타내는 것은 URI에 사용하지 않아야 한다.
+    - 예) GET /books/show/1 -> GET /books/1
+    - 예) GET /books/insert/2 -> POST /books/2
+
+5. 경로 부분 중 변하는 부분은 유일한 값으로 대체한다.
+    - 즉, id는 하나의 특정 resource를 나타내는 고유값을 의미한다.
+    - 예) book을 생성하는 URI: POST /books
+    - 예) id=10 인 book을 삭제하는 URI: DELETE /books/10
+
+6. 슬래시 구분자(/)는 계층 관계를 나타내는데 사용한다.
+    - 예) http://example.com`/courses/java`
+
+7. URI 마지막 문자로 슬래시(/)를 포함하지 않는다.
+    - 예) http://edwith.org/courses/ (X)
+
+8. URI에 포함되는 모든 글자는 리소스의 유일한 식별자로 사용되어야 하며, URI가 다르다는 것은 리소스가 다르다는 것이고, 역으로 리소스가 다르면 URI도 달라져야 한다.
+
+9. 하이픈(-)은 URI 가독성을 높이는데 사용할 수 있다.
+
+10. 밑줄(_)은 URI에 사용하지 않는다.
+
+11. URI 경로는 소문자를 사용한다.
+
+- URI 경로에 대문자 사용은 피하도록 한다.
+    - `RFC 3986(URI 문법 형식)`은 URI 스키마와 호스트를 제외하고는 대소문자를 구별하도록 규정하기 때문이다.
+
+12. 파일 확장자는 URI에 포함하지 않아야 한다.
+    - `Accept Header`를 사용하도록 한다.
+        - 예) http://example.com/files/java.jpg (X)
+        - 예) GET /files/jdk18.exe HTTP/1.1 Host: example.com Accept: image/jpg (O)
+
+13. 리소스 간에 연관 관계가 있는 경우 다음과 같은 방법으로 표현한다.
+
+- /리소스명/리소스 ID/관계가 있는 다른 리소스명
+    - 예) GET : /books/{bookid}/viewers (일반적으로 소유 ‘has’의 관계를 표현할 때)
+
+14. 자원을 표현하는 컬렉션(Collection)과 도큐먼트(Document)
+
+- `컬렉션은 객체의 집합, 도큐먼트는 객체`라고 생각하면 된다.
+    - 컬렉션과 도큐먼트 모두 리소스로 표현할 수 있으며 URI로 표현할 수 있다.
+        - 예) http://example.com`/courses/1`
+            - courses는 컬렉션을 나타내며, 복수로 표현해야 한다. `courses/1 은 courses중에서 id가 1인 도큐먼트를 의미`한다.
+
+### HTTP 응답 상태 코드
+
+1. 잘 설계된 REST API는 URI만 잘 설계되는 것이 아니라 그 리소스에 대한 `응답`도 잘 표현되야 한다.
+2. 정확한 응답의 상태 코드만으로도 많은 정보를 전달할 수 있기 때문이다.
+3. 자주 사용되는 HTTP 상태 코드는 다음과 같다
+
+|상태코드|설명| 
+|:----:|:----| 
+|200|클라이언트의 요청을 정삭적으로 수행함|
+|201|클라이언트 리소스 생성을 요청, 해당 리소스 생성이 정상적으로 수행됨(POST 방식을 통한 리소스 생성 작업 시)|
+|301|클라이언트가 요청한 리소스에 대한 URI가 변경되었을 때(응답시 `Location header`에 변경된 URI를 적어줘야 함)|
+|400|클라이언트의 요청이 부적절한 경우 사용|
+|401|클라이언트가 인증되지 않은 상태에서 보호된 리소스를 요청한 경우(로그인 하지 않은 유저가 로그인 해야만 요청 가능한 리소스를 요청했을 때)|
+|403|유저 인증 상태와 관계 없이 응답하고 싶지 않은 리소스를 클라이언트가 요청했을 때 사용(403보다는 400, 404를 사용하는 것을 권고, 403 자체가 리소스가 존재한다는 것을 의미하는 것이기 때문)|
+|405|클라이언트가 요청한 리소스에는 사용할 수 없는 Method를 이용한 경우|
+|500|서버에 문제가 있을 경우|
+
+### HATEOAS(Hypermedia As The Engine Of Application State)
+
+1. REST API를 요청한 경우 그 결과를 보통 `JSON` 형태로 받게 된다.
+2. 예를 들어, `GET /books/1`와 같은 요청을 보냈다고 했을 때 얻어지는 결과는 다음과 같다.
+   ```json
+   {
+       "id" : 1,
+       "title" : "Hello, spring",
+       "author" : "Kim",
+       "price" : 29000,
+       "_links":{
+           "self":{
+           "href":"http://example.com/books/1"
+           },
+           "query-books":{
+           "href":"http://example.com/books"
+           },
+           "write-books":{
+           "href":"http://example.com/books"
+           }
+       }
+   }
+   ```
+3. 위와 같이 요청에 대한 결고에 관련된 REST API의 정보를 HATEOAS라고 한다.
+    - 다시 위 JSON 결과를 보면, `_links` 부분이 보일 것이다.
+        - `자기 자신의 URL, 컬렉션과 관련된 URL, 리소스 저장을 위한 URL 등`이 표현되어 있는 것을 볼 수 있다.
+    - 이렇게 Data와 함께 관련된 URL 정보를 제공하는 것을 HATEOAS라고 말한다.
+
+### REST와 관련된 논란
+
+1. REST API에 대한 명확한 표준은 없다.
+2. REST API를 구현하는 개발자들은 아키텍처 스타일을 모두 지키는 것이 힘든 경우도 있다.
+    - 그러다보니, 모든 아키텍처 스타일을 지키지 않고 개발하게 되는 경우가 많다.
+    - 특히 REST의 HATEOAS와 `자체 표현 구조(Self-Descriptiveness)`를 만족 못하도록 개발되는 경우가 많다.
+    - 이렇게 REST API를 완벽하게 구현하지 못할 경우를 `Web API`라고 한다.
+    - 참고 영상 [YouTube - 그런 REST API로 괜찮은가](https://www.youtube.com/watch?v=RP_f5dMoHFc)
+
+## Web API
+
+## @RestController
+
+1. 
