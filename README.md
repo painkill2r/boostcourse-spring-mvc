@@ -467,3 +467,41 @@
 3. Jackson 라이브러리를 추가하지 않으면 JSON으로 변환할 수 없어 오류가 발생한다.
     - 사용자가 임의의 메시지 컨버터(Message Converter)를 사용하도록 하려면 `WebMvcConfigurerAdapter`의 `configureMessageConverters()` 메소드를
       오버라이딩 한다.
+
+## Web API 테스트
+
+1. Web API를 작성하다보면 웹 어플리케이션을 실행하고 브라우저를 열어서 테스트할 URI를 입력하고 다시 코드를 작성하고 웹 어플리케이션을 재시작하고 등을 반복하게 된다.
+    - 여기서는 두가지 문제점이 있다.
+        - 개발자의 수동 테스트
+        - 코드를 수정한 후에 서버를 재시작하고 다시 테스트하기
+2. 위와 같은 문제를 해결하기 위해 다음과 같은 방법을 사용할 수 있다.
+    - `JUnit` 사용하기
+    - `MockMvc` 사용하기
+
+### MockMvc
+
+1. 우리는 웹 애플리케이션을 작성한 후, 해당 웹 애플리케이션을 Tomcat이라는 이름의 WAS(Web Application Server)에 배포(deploy)하여 실행을 했다.
+    - 브라우저의 요청은 WAS에게 전달되는 것이고 응답도 WAS에게서 받게 된다.
+    - WAS는 요청을 받은 후, 해당 요청을 처리하는 웹 어플리케이션을 실행하게 된다.
+        - 즉, Web API를 테스트한다는 것은 WAS를 실행해야만 된다는 문제가 있다.
+2. 이런 문제를 해결하기 위해서 스프링 3.2부터 `MockMvc`가 추가되었다.
+    - MockMVC는 WAS와 같은 역할을 수행한다.
+        - 요청을 받고 응답을 받는 WAS와 같은 역할을 수행하면서 개발자가 작성한 웹 애플리케이션을 실행해준다.
+        - WAS는 실행 시 상당한 많은 작업을 수행하지만 MockMvc는 `웹 어플리케이션을 실행하기 위한 최소한의 기능`만을 가지고 있다.
+        - 그렇기 때문에 MockMvc를 이용한 웹 어플리케이션 실행은 상당히 빠르다는 장점이 있다.
+3. MockMvc를 사용하면 다음과 같은 테스트를 해볼 수 있다.
+   ![MockMvc](./images/test/mockmvc01.png)
+
+### 예제를 통해 알아보는 MockMVC Test
+
+1. GuestbookApiController를 테스트하는 GuestbookApiControllerTest 클래스 작성
+   ![MockMvc Test](./images/test/mockmvc02.png)
+    - 단위테스트
+        - GuestbookApiController를 단위 테스트한다는 것은, GuestbookApiController가 사용하는 GuestbookService에 대한 부분은 함께 테스트하지 않는다는 것을
+          의미한다.
+        - 이를 위해 `GuestbookService에 대한 목(Mock, 가짜)객체를 사용`할 것이고 `Mokito를 이용해 목(Mock, 가짜)객체를 생성`한다.
+
+### json-jsonpath 라이브러리
+
+1. REST 또는 Web API에서 받아지는 JSON 결과에 특정 값이 포함되어 있는지 확인하기 위해 사용하는 라이브러리
+2. [JSON Path 위치 지정 방법 참고 링크 바로가기](https://restfulapi.net/json-jsonpath/) 
